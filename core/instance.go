@@ -331,7 +331,7 @@ func (i *instance) launchSpotReplacement() error {
 
 	bidPrice := i.getPricetoBid(instanceType.pricing.onDemand,
 		instanceType.pricing.spot[*i.Placement.AvailabilityZone])
-
+        logger.Println("Launching spot instance", instanceType.instanceType, "with a bid =", bidPrice, "Spot Price =", instanceType.pricing.spot[*i.Placement.AvailabilityZone])
 	runInstancesInput := i.createRunInstancesInput(instanceType.instanceType, bidPrice)
 	resp, err := i.region.services.ec2.RunInstances(runInstancesInput)
 
@@ -355,12 +355,10 @@ func (i *instance) getPricetoBid(
 	logger.Println("BiddingPolicy: ", i.region.conf.BiddingPolicy)
 
 	if i.region.conf.BiddingPolicy == DefaultBiddingPolicy {
-		logger.Println("Launching spot instance with a bid =", baseOnDemandPrice)
 		return baseOnDemandPrice
 	}
 
 	bufferPrice := math.Min(baseOnDemandPrice, currentSpotPrice*(1.0+i.region.conf.SpotPriceBufferPercentage/100.0))
-	logger.Println("Launching spot instance with a bid =", bufferPrice)
 	return bufferPrice
 }
 
