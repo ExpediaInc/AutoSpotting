@@ -337,7 +337,7 @@ func (i *instance) launchSpotReplacement() error {
 
 	if err != nil {
 		logger.Println("Couldn't launch spot instance:", err.Error())
-		logger.Println(runInstancesInput)
+		debug.Println(runInstancesInput)
 		return err
 	}
 
@@ -438,7 +438,7 @@ func (i *instance) createRunInstancesInput(instanceType string, price float64) *
 	if i.asg.LaunchTemplate != nil {
 		retval.LaunchTemplate = &ec2.LaunchTemplateSpecification{
 			LaunchTemplateId: i.asg.LaunchTemplate.LaunchTemplateId,
-			Version: i.asg.LaunchTemplate.Version,
+			Version:          i.asg.LaunchTemplate.Version,
 		}
 	} else if i.IamInstanceProfile != nil {
 		retval.IamInstanceProfile = &ec2.IamInstanceProfileSpecification{
